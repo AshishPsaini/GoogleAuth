@@ -21,11 +21,13 @@
     android:padding="16dp" >
 
     <Button
+        android:layout_gravity="center_horizontal"
         android:id="@+id/greet_me_button"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_margin="10dp"
         android:layout_height="wrap_content"
         android:onClick="greetTheUser"
-        android:text="string/greet_me" />
+        android:text="Greet_me" />
 
     <TextView
         android:id="@+id/message"
