@@ -97,6 +97,7 @@ public class HelloActivity extends Activity {
         	Log.e("Account HERE ", "No Email FOund "+mEmail);
         }
         
+        gplusBtn.setEnabled(false);
         gplusBtn.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -216,6 +217,7 @@ public class HelloActivity extends Activity {
             public void run() {
                 mOut.setText("Hello "+model.getUserName()+" !");
                 uploadImageUsingVolley(model.getUserPicture(),imageView);
+                gplusBtn.setEnabled(true);
                 googleLink=model.getUser_google_link();
                 
             }
