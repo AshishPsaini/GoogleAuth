@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2007 The Android Open Source Project
+<!--
+     Copyright (C) 2007 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,25 +15,41 @@
      limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp" >
 
-        <Button
-            android:id="@+id/greet_me_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="string/greet_me"
-            android:onClick="greetTheUser"/>
+    <Button
+        android:id="@+id/greet_me_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="greetTheUser"
+        android:text="string/greet_me" />
 
-        <TextView
-            android:id="@+id/message"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="fill_vertical"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:paddingTop="16dp"/>
-    
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="fill_vertical"
+        android:paddingTop="16dp"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="0"
+      />
+
+    <Button
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/button1"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="50dp"
+        android:layout_height="36dp"
+        android:text="G+" />
+
 </LinearLayout>

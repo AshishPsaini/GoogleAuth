@@ -21,14 +21,23 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -51,6 +60,8 @@ public class HelloActivity extends Activity {
     
   
     private TextView mOut;
+    private ImageView imageView;
+    private Button gplusBtn;
 
     static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
     static final int REQUEST_CODE_RECOVER_FROM_AUTH_ERROR = 1001;
@@ -59,6 +70,7 @@ public class HelloActivity extends Activity {
     private String mEmail;
 
     private Type requestType;
+    private String googleLink="";
 
     public static String TYPE_KEY = "type_key";
     public static enum Type {FOREGROUND, BACKGROUND, BACKGROUND_WITH_SYNC}
@@ -69,7 +81,9 @@ public class HelloActivity extends Activity {
         setContentView(R.layout.accounts_tester);
 
         mOut = (TextView) findViewById(R.id.message);
-
+        imageView=(ImageView) findViewById(R.id.imageView1);
+        gplusBtn=(Button) findViewById(R.id.button1);
+        
         Bundle extras = getIntent().getExtras();
         requestType = Type.valueOf(extras.getString(TYPE_KEY));
         setTitle(getTitle() + " - " + requestType.name());
@@ -82,6 +96,16 @@ public class HelloActivity extends Activity {
         else {
         	Log.e("Account HERE ", "No Email FOund "+mEmail);
         }
+        
+        gplusBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(googleLink));
+				startActivity(browserIntent);
+				
+			}
+		});
     }
 
     @Override
@@ -125,7 +149,18 @@ public class HelloActivity extends Activity {
         show("Unknown error, click the button again");
     }
 
-    /** Called by button in the layout */
+    public void show(final String string) {
+    	runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mOut.setText(string);
+                
+                
+            }
+        });
+	}
+
+	/** Called by button in the layout */
     public void greetTheUser(View view) {
         getUsername();
     }
@@ -175,11 +210,14 @@ public class HelloActivity extends Activity {
      * This method is a hook for background threads and async tasks that need to update the UI.
      * It does this by launching a runnable under the UI thread.
      */
-    public void show(final String message) {
+    public void show(final UserProfileModel model) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mOut.setText(message);
+                mOut.setText("Hello "+model.getUserName()+" !");
+                uploadImageUsingVolley(model.getUserPicture(),imageView);
+                googleLink=model.getUser_google_link();
+                
             }
         });
     }
@@ -231,4 +269,51 @@ public class HelloActivity extends Activity {
                 return new GetNameInBackground(activity, email, scope);
         }
     }
+    
+    
+    // Volley android network operation API 
+    //.............##########################################################################............................//
+    
+ /*   ref link 
+  * 
+  * 
+    http://developer.android.com/training/volley/requestqueue.html#singleton
+    
+    
+    http://developer.android.com/training/volley/request-custom.html
+    
+    
+*/    	
+    
+    private void uploadImageUsingVolley(String url,final ImageView imageView) {
+    	// Retrieves an image specified by the URL, displays it in the UI.
+    	ImageRequest re=new ImageRequest(url,new Response.Listener<Bitmap>() {
+
+			@Override
+			public void onResponse(final Bitmap arg0) {
+				imageView.setImageBitmap(arg0);
+			}
+		}, 0,0,null, null);
+    	
+    	RequestQueue reqQueue=Volley.newRequestQueue(getApplicationContext());
+    	reqQueue.add(re);
+       }
+   
 }
+
+
+  
+
+
+//format
+
+/*{
+	 "id": "112995633952642313321",
+	 "name": "Ashish Saini",
+	 "given_name": "Ashish",
+	 "family_name": "Saini",
+	 "link": "https://plus.google.com/112995633952642313321",
+	 "picture": "https://lh3.googleusercontent.com/-VbZV0gVUZvE/AAAAAAAAAAI/AAAAAAAAASo/8RJF5RhH9W8/photo.jpg",
+	 "gender": "male",
+	 "locale": "en"
+	}*/

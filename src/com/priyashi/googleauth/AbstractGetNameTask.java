@@ -93,8 +93,10 @@ public abstract class AbstractGetNameTask extends AsyncTask<Void, Void, Void>{
         int sc = con.getResponseCode();
         if (sc == 200) {
           InputStream is = con.getInputStream();
-          String name = getFirstName(readResponse(is));
-          mActivity.show("Hello " + name + "!");
+          String res=readResponse(is);
+          Log.e("REsponse :  ", res);
+          UserProfileModel model = getUserDetail(res);
+          mActivity.show(model);
           is.close();
           return;
         } else if (sc == 401) {
@@ -125,8 +127,16 @@ public abstract class AbstractGetNameTask extends AsyncTask<Void, Void, Void>{
      * Parses the response and returns the first name of the user.
      * @throws JSONException if the response is not JSON or if first name does not exist in response
      */
-    private String getFirstName(String jsonResponse) throws JSONException {
+    private UserProfileModel getUserDetail(String jsonResponse) throws JSONException {
+    	UserProfileModel model=new UserProfileModel();
+    	
       JSONObject profile = new JSONObject(jsonResponse);
-      return profile.getString(NAME_KEY);
+      model.setUserName(profile.getString(ConstantStrings.USER_NAME));
+      model.setUser_gender(profile.getString(ConstantStrings.USER_GENDER));
+      model.setUser_google_link(profile.getString(ConstantStrings.USER_GOOGLE_LINK));
+      model.setUser_locale(profile.getString(ConstantStrings.USER_LOCALE));
+      model.setUserPicture(profile.getString(ConstantStrings.USER_PICTURE));
+      
+      return model;
     }
 }
